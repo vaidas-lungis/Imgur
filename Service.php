@@ -26,4 +26,21 @@ class Service implements InjectionAwareInterface
     {
         return $this->di;
     }
+
+    public function install()
+    {
+        $sql="
+        CREATE TABLE IF NOT EXISTS `imgur` (
+        `id` bigint(20) NOT NULL AUTO_INCREMENT,
+        `client_id` bigint(20) DEFAULT NULL,
+        `url` VARCHAR (255) DEFAULT NULL,
+        `created_at` datetime DEFAULT NULL,
+        `updated_at` datetime DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `client_id_idx` (`client_id`)
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+        ";
+
+        return $this->di['db']->exec($sql) > 0;
+    }
 }
