@@ -1,0 +1,8 @@
+{
+    "id":           "imgur",
+    "type":         "mod",
+    "name":         "Imgur",
+    "icon_url":     "icon.png",
+    "description":  "Extension for file uploading to Imgur",
+    "version":      "1.0.0"
+}
