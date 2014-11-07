@@ -37,4 +37,22 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($restult);
     }
 
+    public function testUninstall()
+    {
+        $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
+        $dbMock->expects($this->atLeastOnce())
+            ->method('exec')
+            ->with('DROP TABLE IF EXISTS `imgur`')
+            ->willReturn(true);
+        $di = new \Box_Di();
+        $di['db'] = $dbMock;
+
+        $this->service->setDi($di);
+        $restult = $this->service->uninstall();
+        $this->assertInternalType('bool', $restult);
+        $this->assertTrue($restult);
+    }
+
+    
+
 }

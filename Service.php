@@ -43,4 +43,9 @@ class Service implements InjectionAwareInterface
 
         return $this->di['db']->exec($sql) > 0;
     }
+
+    public function uninstall()
+    {
+        return $this->di['db']->exec("DROP TABLE IF EXISTS `imgur`") > 0;
+    }
 }
