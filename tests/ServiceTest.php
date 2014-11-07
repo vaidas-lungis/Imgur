@@ -39,10 +39,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testUninstall()
     {
+        $sqlDeleteMetaValues = 'DELETE imgur WHERE extension = "mod_imgur"';
+        $sqlDeleteTable = 'DROP TABLE IF EXISTS `imgur`';
         $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
         $dbMock->expects($this->atLeastOnce())
             ->method('exec')
-            ->with('DROP TABLE IF EXISTS `imgur`')
+            ->withConsecutive(array($sqlDeleteMetaValues), array($sqlDeleteTable))
             ->willReturn(true);
         $di = new \Box_Di();
         $di['db'] = $dbMock;
@@ -53,6 +55,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($restult);
     }
 
-    
+
 
 }
