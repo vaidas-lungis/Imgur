@@ -14,14 +14,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->api = new \Box\Mod\Imgur\Api\Client();
     }
 
-    public function testDi()
-    {
-        $di = new \Box_Di();
-        $this->api->setDi($di);
-        $getDi = $this->api->getDi();
-        $this->assertEquals($di, $getDi);
-    }
-
     public function testuploadImage_createsNewImageInfo()
     {
         $validatorMock = $this->getMockBuilder('\Box_Validate')->getMock();
