@@ -324,6 +324,42 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($new_id, $result);
     }
 
+    public function testimageInfoExists()
+    {
+        $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
+        $dbMock->expects($this->atLeastOnce())
+            ->method('findOne')
+            ->with('imgur')
+            ->willReturn(null);
+
+        $di = new \Box_Di();
+        $di['db'] = $dbMock;
+
+        $this->service->setDi($di);
+        $client_id = 1;
+        $support_ticket_id = 1;
+        $result = $this->service->imageInfoExists($client_id, $support_ticket_id);
+        $this->assertNull($result);
+    }
+
+    public function testupdateImageInfo()
+    {
+        $model = new \RedBean_SimpleModel();
+        $model->loadBean(new \RedBeanPHP\OODBBean());
+        $model->id = 1;
+
+        $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
+        $dbMock->expects($this->atLeastOnce())
+            ->method('store');
+
+        $di = new \Box_Di();
+        $di['db'] = $dbMock;
+
+        $this->service->setDi($di);
+        $result = $this->service->updateImageInfo($model, 'link/to/url');
+        $this->assertInternalType('int', $result);
+        $this->assertEquals($model->id, $result);
+    }
 
 
 

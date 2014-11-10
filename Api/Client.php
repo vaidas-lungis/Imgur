@@ -17,6 +17,16 @@ class Client extends \Api_Abstract
         if (empty($imageLink)){
             throw new \Box_Exception('Upload unsuccessful');
         }
-        return $this->getService()->saveImageInfo($imageLink, $data);
+
+        $model = $this->getService()->imageInfoExists($data['client_id'], $data['support_ticket_id']);
+
+        if ($model){
+            $recordId = $this->getService()->updateImageInfo($model, $imageLink);
+        }
+        else{
+            $recordId = $this->getService()->saveImageInfo($imageLink, $data);
+        }
+
+        return $recordId;
     }
 }

@@ -111,6 +111,18 @@ class Service implements InjectionAwareInterface
         return $id;
     }
 
+    public function imageInfoExists($client_id, $support_ticket_id)
+    {
+        return $this->di['db']->findOne('imgur', 'client_id = ? AND support_ticket_id = ?', array((int) $client_id, (int) $support_ticket_id));
+    }
+
+    public function updateImageInfo($model, $imageLink)
+    {
+        $model->url = $imageLink;
+        $this->di['db']->store($model);
+        return $model->id;
+    }
+
     public function isSetClientId($config = array())
     {
         return isset($config['client_id']) && strlen(trim($config['client_id'])) > 0;
