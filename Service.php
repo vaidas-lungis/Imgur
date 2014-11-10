@@ -33,6 +33,7 @@ class Service implements InjectionAwareInterface
         CREATE TABLE IF NOT EXISTS `imgur` (
         `id` bigint(20) NOT NULL AUTO_INCREMENT,
         `client_id` bigint(20) DEFAULT NULL,
+        `support_ticket_id` bigint(20) DEFAULT NULL,
         `url` VARCHAR (255) DEFAULT NULL,
         `created_at` datetime DEFAULT NULL,
         `updated_at` datetime DEFAULT NULL,
