@@ -93,13 +93,17 @@ class Service implements InjectionAwareInterface
         );
 
         $client = $this->di['guzzle_client'];
-        return $client->post('https://api.imgur.com/3/image', $headers, $params);
+        $result  = $client->post('https://api.imgur.com/3/image.json', $headers, $params);
+        $imageArr = json_decode($result, true);
+        return isset($imageArr['data']['link']) ? $imageArr['data']['link'] : '';
     }
 
-    public function saveImageRemoteId($image_id)
+    public function saveImageInfo($imageLink, $data = array())
     {
         $model = $this->di['db']->dispense('Imgur');
-        $model->url = sprintf('https://api.imgur.com/3/image/%d', $image_id);
+        $model->client_id = $data['client_id'];
+        $model->support_ticket_id = $data['support_ticket_id'];
+        $model->url = $imageLink;
         $model->created_at = date('c');
         $model->updated_at = date('c');
         $id = $this->di['db']->store($model);

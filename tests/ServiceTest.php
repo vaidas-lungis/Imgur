@@ -130,8 +130,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $guzzleClientMock = $this->getMockBuilder('\Guzzle\Http\Client')->disableOriginalConstructor()->getMock();
         $guzzleClientMock->expects($this->atLeastOnce())
             ->method('post')
-            ->with('https://api.imgur.com/3/image')
-            ->willReturn(1);
+            ->with('https://api.imgur.com/3/image.json')
+            ->willReturn(json_encode(array('data' => array('link' => 'link/to/file'))));
 
         $successfullyUploadedFileCount = 1;
         $file = array(
@@ -161,7 +161,64 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->service->setDi($di);
 
-        $this->service->uploadImage(array());
+        $result = $this->service->uploadImage(array());
+        $this->assertInternalType('string', $result);
+        $this->assertNotEmpty($result);
+    }
+
+    public function testuploadImage_UnsuccesfulUpload()
+    {
+        $config = array(
+            'client_id' => '1eeee1234',
+            'secrect' => 'code',
+        );
+        $extensionServiceMock = $this->getMockBuilder('\Box\Mod\Extension\Service')->getMock();
+        $extensionServiceMock->expects($this->atLeastOnce())
+            ->method('getConfig')
+            ->with('mod_imgur')
+            ->willReturn($config);
+
+        $toolsMock = $this->getMockBuilder('\Box_Tools')->getMock();
+        $toolsMock->expects($this->atLeastOnce())
+            ->method('file_get_contents');
+
+        $guzzleClientMock = $this->getMockBuilder('\Guzzle\Http\Client')->disableOriginalConstructor()->getMock();
+        $guzzleClientMock->expects($this->atLeastOnce())
+            ->method('post')
+            ->with('https://api.imgur.com/3/image.json')
+            ->willReturn(json_encode(array()));
+
+        $successfullyUploadedFileCount = 1;
+        $file = array(
+            'name' => 'test',
+            'tmp_name' => '12345',
+        );
+        $fileMock = new \Box_RequestFile($file);
+
+        $requestMock = $this->getMockBuilder('\Box_Request')->getMock();
+        $requestMock->expects($this->atLeastOnce())
+            ->method('hasFiles')
+            ->will($this->returnValue($successfullyUploadedFileCount));
+        $requestMock->expects($this->atLeastOnce())
+            ->method('getUploadedFiles')
+            ->will($this->returnValue(array($fileMock)));
+
+
+        $di = new \Box_Di();
+        $di['mod_service'] = $di->protect( function ($extensionName) use ($extensionServiceMock) {
+            if ($extensionName == 'Extension'){
+                return $extensionServiceMock;
+            }
+        });
+        $di['tools'] = $toolsMock;
+        $di['request'] = $requestMock;
+        $di['guzzle_client'] = $guzzleClientMock;
+
+        $this->service->setDi($di);
+
+        $result = $this->service->uploadImage(array());
+        $this->assertInternalType('string', $result);
+        $this->assertEmpty($result);
     }
 
     public function testuploadImage_Missing_image()
@@ -209,12 +266,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->service->setDi($di);
 
-        $data = array('image' => 'path/to/image');
+        $data = array('image' => 'path/to/image.json');
         $this->setExpectedException('\Box_Exception', 'Client ID param is missing');
         $this->service->uploadImage($data);
     }
 
-    public function testsaveImageRemoteId()
+    public function testsaveImageInfo()
     {
 
         $model = new \RedBean_SimpleModel();
@@ -236,7 +293,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $di['db'] = $dbMock;
 
         $this->service->setDi($di);
-        $result = $this->service->saveImageRemoteId(1);
+        $result = $this->service->saveImageInfo(1);
         $this->assertInternalType('int', $result);
         $this->assertEquals($new_id, $result);
     }
