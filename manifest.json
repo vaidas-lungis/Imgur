@@ -3,6 +3,6 @@
     "type":         "mod",
     "name":         "Imgur",
     "icon_url":     "icon.png",
-    "description":  "Extension for file uploading to Imgur",
+    "description":  "Extension for file uploads to Imgur service",
     "version":      "1.0.0"
 }
