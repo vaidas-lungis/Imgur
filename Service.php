@@ -71,7 +71,8 @@ class Service implements InjectionAwareInterface
 
     public function uploadImage($data)
     {
-        if (!isset($data['image'])){
+
+        if ($this->di['request']->hasFiles() == 0){
             throw new \Box_Exception('Image is missing');
         }
 
@@ -83,9 +84,12 @@ class Service implements InjectionAwareInterface
         }
 
         $headers = sprintf('Authorization: Client-ID %s', $config['client_id']);
+
+        $files = $this->di['request']->getUploadedFiles();
+        $file = $files[0];
         $params = array(
             'type'  => 'base64',
-            'image' => base64_encode($this->di['tools']->file_get_contents($data['image'])),
+            'image' => base64_encode($this->di['tools']->file_get_contents($file->getRealPath())),
         );
 
         $client = $this->di['guzzle_client'];

@@ -133,6 +133,21 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             ->with('https://api.imgur.com/3/image')
             ->willReturn(1);
 
+        $successfullyUploadedFileCount = 1;
+        $file = array(
+            'name' => 'test',
+            'tmp_name' => '12345',
+        );
+        $fileMock = new \Box_RequestFile($file);
+
+        $requestMock = $this->getMockBuilder('\Box_Request')->getMock();
+        $requestMock->expects($this->atLeastOnce())
+            ->method('hasFiles')
+            ->will($this->returnValue($successfullyUploadedFileCount));
+        $requestMock->expects($this->atLeastOnce())
+            ->method('getUploadedFiles')
+            ->will($this->returnValue(array($fileMock)));
+
 
         $di = new \Box_Di();
         $di['mod_service'] = $di->protect( function ($extensionName) use ($extensionServiceMock) {
@@ -141,12 +156,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             }
         });
         $di['tools'] = $toolsMock;
+        $di['request'] = $requestMock;
         $di['guzzle_client'] = $guzzleClientMock;
 
         $this->service->setDi($di);
 
-        $data = array('image' => 'path/to/image');
-        $this->service->uploadImage($data);
+        $this->service->uploadImage(array());
     }
 
     public function testuploadImage_Missing_image()
@@ -155,6 +170,15 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             'client_id' => '1eeee1234',
             'secrect' => 'code',
         );
+
+        $requestMock = $this->getMockBuilder('\Box_Request')->getMock();
+        $requestMock->expects($this->atLeastOnce())
+            ->method('hasFiles')
+            ->will($this->returnValue(0));
+
+        $di = new \Box_Di();
+        $di['request'] = $requestMock;
+        $this->service->setDi($di);
 
         $this->setExpectedException('\Box_Exception', 'Image is missing');
         $this->service->uploadImage(array());
@@ -169,7 +193,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             ->with('mod_imgur')
             ->willReturn($config);
 
+
+        $requestMock = $this->getMockBuilder('\Box_Request')->getMock();
+        $requestMock->expects($this->atLeastOnce())
+            ->method('hasFiles')
+            ->will($this->returnValue(1));
+
         $di = new \Box_Di();
+        $di['request'] = $requestMock;
         $di['mod_service'] = $di->protect( function ($extensionName) use ($extensionServiceMock) {
             if ($extensionName == 'Extension'){
                 return $extensionServiceMock;
