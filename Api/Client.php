@@ -2,7 +2,7 @@
 
 namespace Box\Mod\Imgur\Api;
 
-class Admin extends \Api_Abstract
+class Client extends \Api_Abstract
 {
 
     public function uploadImage($data)
