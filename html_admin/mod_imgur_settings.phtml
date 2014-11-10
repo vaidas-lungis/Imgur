@@ -1,0 +1,65 @@
+{% extends request.ajax ? "layout_blank.phtml" : "layout_default.phtml" %}
+{% set active_menu = 'system' %}
+{% block meta_title %}{% trans 'Imgur configuration' %}{% endblock %}
+
+{% block breadcrumbs %}
+    <ul>
+        <li class="firstB"><a href="{{ '/'|alink }}">{% trans 'Home' %}</a></li>
+        <li><a href="{{ 'system'|alink }}">{% trans 'Settings' %}</a></li>
+        <li class="lastB">{% trans 'Imgur configuration' %}</li>
+    </ul>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="widget">
+        <div class="head">
+            <h5>{% trans 'Imgur API' %}</h5>
+        </div>
+        
+        {% set params = admin.imgur_config_get %}
+        <form method="post" action="{{ 'api/admin/imgur/config_update'|link }}" class="mainForm save api-form" data-api-msg="{% trans 'Configuration updated' %}">
+            <fieldset>
+                <div class="rowElem noborder">
+                    <label>{% trans 'Client ID' %}:</label>
+                    <div class="formRight">
+                        <input type="text" name="client_id" value="{{params.client_id}}" required="required">
+                    </div>
+                    <div class="fix"></div>
+                </div>
+                <div class="rowElem">
+                    <label>{% trans 'Client secret' %}:</label>
+                    <div class="formRight">
+                        <input type="text" name="secrect" value="{{params.secrect}}" required="required">
+                    </div>
+                    <div class="fix"></div>
+                </div>
+
+                <input type="submit" value="{% trans 'Update' %}" class="greyishBtn submitForm" />
+            </fieldset>
+        </form>
+
+    </div>
+        
+{% endblock %}
+
+{% block js %}
+{% autoescape true js %}
+<script type="text/javascript">
+    
+function onAfterBecomePartner() {
+    bb.msg('You have successfully become BoxBilling partner.');
+}
+
+$(function() {
+    $('#testconnection').click(function(){
+        bb.post('admin/serviceboxbillinglicense/test_connection', null, function(result){
+            bb.msg('Successfully connected to BoxBilling API');
+        });
+        return false;
+    });
+});
+</script>
+{% endautoescape %}
+{% endblock %}
