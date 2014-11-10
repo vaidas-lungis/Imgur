@@ -71,9 +71,8 @@ class Service implements InjectionAwareInterface
 
     public function uploadImage($data)
     {
-
         if ($this->di['request']->hasFiles() == 0){
-            throw new \Box_Exception('Image is missing');
+            throw new \Box_Exception('Image is missing', null, 997);
         }
 
         $extensionService = $this->di['mod_service']('Extension');
@@ -83,7 +82,6 @@ class Service implements InjectionAwareInterface
             throw new \Box_Exception('Client ID param is missing');
         }
 
-        $headers = sprintf('Authorization: Client-ID %s', $config['client_id']);
 
         $files = $this->di['request']->getUploadedFiles();
         $file = $files[0];
@@ -93,14 +91,17 @@ class Service implements InjectionAwareInterface
         );
 
         $client = $this->di['guzzle_client'];
-        $result  = $client->post('https://api.imgur.com/3/image.json', $headers, $params);
-        $imageArr = json_decode($result, true);
-        return isset($imageArr['data']['link']) ? $imageArr['data']['link'] : '';
+        $headers = array('Authorization' => sprintf('Client-ID %s', $config['client_id']));
+
+        $result = $client->post('https://api.imgur.com/3/image.json', $headers, $params)
+            ->send()
+            ->json();
+        return isset($result['data']['link']) ? $result['data']['link'] : '';
     }
 
     public function saveImageInfo($imageLink, $data = array())
     {
-        $model = $this->di['db']->dispense('Imgur');
+        $model = $this->di['db']->dispense('imgur');
         $model->client_id = $data['client_id'];
         $model->support_ticket_id = $data['support_ticket_id'];
         $model->url = $imageLink;

@@ -127,11 +127,22 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $toolsMock->expects($this->atLeastOnce())
             ->method('file_get_contents');
 
+
+        $guzzleResponseMock = $this->getMockBuilder('\Guzzle\Http\Message\Response')->disableOriginalConstructor()->getMock();
+        $guzzleResponseMock->expects($this->atLeastOnce())
+            ->method('json')
+            ->willReturn(array('data' => array('link' => 'link/to/file')));
+
+        $guzzleMessageMock = $this->getMockBuilder('\Guzzle\Http\Message\Request')->disableOriginalConstructor()->getMock();
+        $guzzleMessageMock->expects($this->atLeastOnce())
+            ->method('send')
+            ->willReturn($guzzleResponseMock);
+
         $guzzleClientMock = $this->getMockBuilder('\Guzzle\Http\Client')->disableOriginalConstructor()->getMock();
         $guzzleClientMock->expects($this->atLeastOnce())
             ->method('post')
             ->with('https://api.imgur.com/3/image.json')
-            ->willReturn(json_encode(array('data' => array('link' => 'link/to/file'))));
+            ->willReturn($guzzleMessageMock);
 
         $successfullyUploadedFileCount = 1;
         $file = array(
@@ -182,11 +193,21 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $toolsMock->expects($this->atLeastOnce())
             ->method('file_get_contents');
 
+        $guzzleResponseMock = $this->getMockBuilder('\Guzzle\Http\Message\Response')->disableOriginalConstructor()->getMock();
+        $guzzleResponseMock->expects($this->atLeastOnce())
+            ->method('json')
+            ->willReturn(array());
+
+        $guzzleMessageMock = $this->getMockBuilder('\Guzzle\Http\Message\Request')->disableOriginalConstructor()->getMock();
+        $guzzleMessageMock->expects($this->atLeastOnce())
+            ->method('send')
+            ->willReturn($guzzleResponseMock);
+
         $guzzleClientMock = $this->getMockBuilder('\Guzzle\Http\Client')->disableOriginalConstructor()->getMock();
         $guzzleClientMock->expects($this->atLeastOnce())
             ->method('post')
             ->with('https://api.imgur.com/3/image.json')
-            ->willReturn(json_encode(array()));
+            ->willReturn($guzzleMessageMock);
 
         $successfullyUploadedFileCount = 1;
         $file = array(
@@ -280,7 +301,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
         $dbMock->expects($this->atLeastOnce())
             ->method('dispense')
-            ->with('Imgur')
+            ->with('imgur')
             ->willReturn($model);
 
         $new_id = 1;
@@ -293,7 +314,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $di['db'] = $dbMock;
 
         $this->service->setDi($di);
-        $result = $this->service->saveImageInfo(1);
+
+        $requiredParams =array(
+            'support_ticket_id' => 1,
+            'client_id' => 1
+        );
+        $result = $this->service->saveImageInfo('image/link', $requiredParams);
         $this->assertInternalType('int', $result);
         $this->assertEquals($new_id, $result);
     }
