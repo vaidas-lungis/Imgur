@@ -4,5 +4,8 @@
     "name":         "Imgur",
     "icon_url":     "icon.png",
     "description":  "Extension for file uploads to Imgur service",
-    "version":      "1.0.0"
+    "version":      "1.0.0",
+    "project_url":  "https://github.com/vaidas-lungis/Imgur",
+    "author_url":   "https://github.com/vaidas-lungis",
+    "author":       "Vaidas Lungis"
 }
