@@ -20,6 +20,14 @@
         
         {% set params = admin.imgur_config_get %}
         <form method="post" action="{{ 'api/admin/imgur/config_update'|link }}" class="mainForm save api-form" data-api-msg="{% trans 'Configuration updated' %}">
+            <div class="help">
+                <ol style="list-style: decimal; margin-left: 20px;">
+                    <li>{% trans 'Register an Application at' %}: <a href="https://api.imgur.com/oauth2/addclient" target="_blank">https://api.imgur.com/oauth2/addclient</a></li>
+                    <li>{% trans 'Select Authorization type:' %} <strong>{% trans 'Anonymous usage without user authorization' %}</strong></li>
+                    <li>{% trans 'Authorization callback URL is your Boxbilling base url' %}</li>
+                    <li>{% trans 'Please copy and paste Client ID and Secret into field below and click' %} <strong>{% trans 'Update' %}</strong></li>
+                </ol>
+            </div>
             <fieldset>
                 <div class="rowElem noborder">
                     <label>{% trans 'Client ID' %}:</label>
