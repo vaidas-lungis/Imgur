@@ -47,7 +47,7 @@ class Service implements InjectionAwareInterface
 
     public function uninstall()
     {
-        $this->di['db']->exec('DELETE imgur WHERE extension = "mod_imgur"');
+        $this->di['db']->exec('DELETE FROM extension_meta WHERE extension = "mod_imgur"');
 
         return $this->di['db']->exec("DROP TABLE IF EXISTS `imgur`") > 0;
     }

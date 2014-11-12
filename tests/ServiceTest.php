@@ -39,7 +39,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testUninstall()
     {
-        $sqlDeleteMetaValues = 'DELETE imgur WHERE extension = "mod_imgur"';
+        $sqlDeleteMetaValues = 'DELETE FROM extension_meta WHERE extension = "mod_imgur"';
         $sqlDeleteTable = 'DROP TABLE IF EXISTS `imgur`';
         $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
         $dbMock->expects($this->atLeastOnce())
