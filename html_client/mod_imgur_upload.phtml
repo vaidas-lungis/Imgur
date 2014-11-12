@@ -1,10 +1,9 @@
+{% set imageUrl = client.imgur_imageExists({'support_ticket_id' : support_ticket_id}) %}
 <form method="post" action="{{ 'api/client/imgur/uploadImage'|link }}" class="mainForm" enctype="multipart/form-data"
       target="uploadframe" id="imgur-upload-form">
     <fieldset>
 
         <div class="rowElem">
-            <label>Upload new file:</label>
-
             <div class="formRight noborder">
                 <input type="file" name="image" id="image">
                 <input type="hidden" name="support_ticket_id" value="{{support_ticket_id}}" />
@@ -12,8 +11,12 @@
             <div class="fix"></div>
         </div>
 
-        <input type="submit" value="Upload" class="greyishBtn submitForm" id="bb-upload-button"/>
+        <input type="submit" value="Upload" class="btn btn-small submitForm" id="bb-upload-button"/>
     </fieldset>
+
+    {% if imageUrl %}
+        <a class="btn btn-small" href="{{ imageUrl }}" target="_blank">{% trans 'View' %}</a>
+    {% endif %}
 </form>
 
 <script type="text/javascript">
