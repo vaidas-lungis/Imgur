@@ -48,6 +48,24 @@
             </fieldset>
         </form>
 
+        <hr/>
+        <div class="help">
+            <h3>{% trans 'Add attachment form to template' %}</h3>
+            <p>You need to edit admin area and clients support ticket templates <strong>(mod_support_ticket.phtml)</strong> to include attachment upload form</p>
+            <p>Add: </p>
+
+            <div class="widget">
+                <div class="head"></div>
+                <pre class="showCodeJS">
+                    {% raw %}{% include 'mod_imgur_upload.phtml with {'support_ticket_id' : ticket.id}'%}{% endraw %}
+                </pre>
+            </div>
+
+            <p>{% trans 'Admin area template file should be at' %}: <strong>bb-themes/admin_default/html</strong></p>
+            <p>{% trans 'Client area template file should be at' %}: <strong>bb-themes/huraga/html</strong> {% trans 'or' %} <strong>src/bb-modules/support/client_html</strong></p>
+
+        </div>
+
     </div>
         
 {% endblock %}
