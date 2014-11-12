@@ -92,7 +92,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $params = array(
             'client_id' => '1eeee1234',
-            'secrect' => 'code',
+            'secret' => 'code',
         );
 
         $this->service->setDi($di);
@@ -104,7 +104,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testupdateConfig_Client_ID_missing()
     {
         $params = array(
-            'secrect' => 'code',
+            'secret' => 'code',
         );
 
         $this->setExpectedException('\Box_Exception', 'Client ID param is missing');
@@ -115,7 +115,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $config = array(
             'client_id' => '1eeee1234',
-            'secrect' => 'code',
+            'secret' => 'code',
         );
         $extensionServiceMock = $this->getMockBuilder('\Box\Mod\Extension\Service')->getMock();
         $extensionServiceMock->expects($this->atLeastOnce())
@@ -181,7 +181,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $config = array(
             'client_id' => '1eeee1234',
-            'secrect' => 'code',
+            'secret' => 'code',
         );
         $extensionServiceMock = $this->getMockBuilder('\Box\Mod\Extension\Service')->getMock();
         $extensionServiceMock->expects($this->atLeastOnce())
@@ -246,7 +246,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $config = array(
             'client_id' => '1eeee1234',
-            'secrect' => 'code',
+            'secret' => 'code',
         );
 
         $requestMock = $this->getMockBuilder('\Box_Request')->getMock();
