@@ -69,23 +69,3 @@
     </div>
         
 {% endblock %}
-
-{% block js %}
-{% autoescape true js %}
-<script type="text/javascript">
-    
-function onAfterBecomePartner() {
-    bb.msg('You have successfully become BoxBilling partner.');
-}
-
-$(function() {
-    $('#testconnection').click(function(){
-        bb.post('admin/serviceboxbillinglicense/test_connection', null, function(result){
-            bb.msg('Successfully connected to BoxBilling API');
-        });
-        return false;
-    });
-});
-</script>
-{% endautoescape %}
-{% endblock %}
