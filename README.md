@@ -12,7 +12,11 @@ Imgur is a BoxBilling extension for support ticket image attachment upload to Im
 * You will be redirected to Imgur extension setting page.
 
 ## Using extension
-
+* You need to register application and get Client ID from [Imgur developer page](https://api.imgur.com/oauth2/addclient)
+* Edit admin area and clients support ticket templates (mod_support_ticket.phtml) to include attachment upload form template
+```
+{% include 'mod_imgur_upload.phtml with {'support_ticket_id' : ticket.id}'%}
+```
 
 ## Tests
 Imgur module tests work only when it is placed in Boxbilling bb-modules folder.
