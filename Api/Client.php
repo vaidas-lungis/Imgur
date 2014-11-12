@@ -29,4 +29,17 @@ class Client extends \Api_Abstract
 
         return $recordId;
     }
+
+    public function imageExists($data)
+    {
+        $required = array(
+            'support_ticket_id' => 'Ticket ID is missing',
+        );
+        $this->di['validator']->checkRequiredParamsForArray($required, $data);
+
+        $data['client_id'] = $this->getIdentity()->id;
+        $model = $this->getService()->imageInfoExists($data['client_id'], $data['support_ticket_id']);
+
+        return ($model) ? $model->url : false;
+    }
 }
