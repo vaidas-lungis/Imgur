@@ -2,7 +2,7 @@
   "name": "vaidas-lungis/Imgur",
   "autoload": {
     "psr-0" : {
-      "Box\\Mod\\Imgur" : "src/bb-modukes/Imgur"
+      "Box\\Mod\\Imgur" : "Api/"
     }
   },
   "require": {
