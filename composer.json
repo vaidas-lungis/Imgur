@@ -1,0 +1,11 @@
+{
+  "name": "vaidas-lungis/Imgur",
+  "autoload": {
+    "psr-0" : {
+      "Box\\Mod\\Imgur" : "src/bb-modukes/Imgur"
+    }
+  },
+  "require": {
+    "boxbilling/boxbilling": "*"
+  }
+}
